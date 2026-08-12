@@ -1,0 +1,1102 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>はじめてガイド｜キニナルメーカー</title>
+<meta name="description" content="キニナルメーカーの使い方を、会話しながら3分で覚えられるガイドです。">
+<meta property="og:title" content="はじめてガイド｜キニナルメーカー">
+<meta property="og:description" content="キニナルメーカーの使い方を、会話しながら3分で覚えられるガイドです。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://notti.jp/tutorial">
+<meta property="og:image" content="https://notti.jp/tutorial/images/g-01.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="canonical" href="https://notti.jp/tutorial">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================
+   キニナルメーカー はじめてガイド
+   ----------------------------------------------------------
+   ■ 文章・画像の差し替えは、下のほうにある
+     「ここだけ編集すればOK」の中だけで完結します。
+     このCSS部分は基本さわらなくて大丈夫です。
+   ========================================================== */
+
+:root{
+  /* 色 ---------------------------------------------------- */
+  --paper:   #EDEFF2;   /* 背景（うすい紙色）           */
+  --ink:     #1C2431;   /* 文字（濃紺）                 */
+  --ink-sub: #5A6472;   /* うすい文字                   */
+  --bubble:  #FFFFFF;   /* 吹き出しの色                 */
+  --indigo:  #2D4A63;   /* 主役の色（藍）ボタンなど     */
+  --indigo-d:#1F3648;   /* 藍・押したとき               */
+  --gold:    #D9A227;   /* さし色（山吹）進捗バーなど   */
+  --line:    #D5DAE1;   /* 罫線                         */
+
+  /* 大きさ ------------------------------------------------ */
+  --fs-body: 18px;      /* 本文の文字サイズ             */
+  --fs-lead: 20px;      /* 太字・見出しの文字サイズ     */
+  --btn-h:   58px;      /* ボタンの高さ                 */
+  --maxw:    600px;     /* 画面の最大幅                 */
+}
+
+*{ box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+html,body{
+  margin:0; padding:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:"Zen Kaku Gothic New","Hiragino Sans","Yu Gothic",sans-serif;
+  font-size:var(--fs-body);
+  line-height:1.85;
+  -webkit-text-size-adjust:100%;
+}
+
+#app{
+  max-width:var(--maxw);
+  margin:0 auto;
+  min-height:100dvh;
+  display:flex;
+  flex-direction:column;
+  background:var(--paper);
+  box-shadow:0 0 40px rgba(28,36,49,.08);
+}
+
+/* ===== 上のバー ===== */
+header{
+  position:sticky; top:0; z-index:30;
+  background:var(--indigo);
+  color:#fff;
+  padding:env(safe-area-inset-top) 0 0 0;
+}
+.hd-row{ display:flex; align-items:center; gap:10px; padding:12px 14px 10px; }
+.hd-back{
+  flex:0 0 auto; width:44px; height:44px;
+  display:flex; align-items:center; justify-content:center;
+  background:rgba(255,255,255,.12); border:0; border-radius:50%;
+  color:#fff; font-size:22px; line-height:1; cursor:pointer;
+}
+.hd-back:disabled{ opacity:.25; cursor:default; }
+.hd-title{
+  flex:1 1 auto;
+  font-family:"Shippori Mincho B1",serif;
+  font-weight:700; font-size:17px; letter-spacing:.04em; line-height:1.3;
+}
+.hd-title small{
+  display:block; font-family:"Zen Kaku Gothic New",sans-serif;
+  font-weight:400; font-size:12px; opacity:.7; letter-spacing:.08em;
+}
+.hd-step{ flex:0 0 auto; font-size:13px; letter-spacing:.06em; opacity:.85; font-variant-numeric:tabular-nums; }
+.hd-bar{ height:4px; background:rgba(255,255,255,.18); }
+.hd-bar>i{ display:block; height:100%; width:0%; background:var(--gold); transition:width .45s ease; }
+
+/* ===== 会話エリア ===== */
+main{ flex:1 1 auto; padding:20px 16px 24px; overflow-anchor:none; }
+
+.msg{
+  display:flex; gap:10px; margin:0 0 12px;
+  opacity:0; transform:translateY(8px);
+  animation:pop .38s ease forwards;
+}
+@keyframes pop{ to{ opacity:1; transform:none; } }
+@media (prefers-reduced-motion:reduce){
+  .msg{ animation:none; opacity:1; transform:none; }
+  .hd-bar>i{ transition:none; }
+}
+
+.av{
+  flex:0 0 auto; width:38px; height:38px; border-radius:50%;
+  background:var(--indigo); color:#fff;
+  display:flex; align-items:center; justify-content:center;
+  font-family:"Shippori Mincho B1",serif; font-size:15px; overflow:hidden;
+}
+.av img{ width:100%; height:100%; object-fit:cover; }
+.av.hide{ visibility:hidden; }
+
+.bub{
+  background:var(--bubble);
+  border-radius:18px;
+  padding:13px 16px;
+  max-width:calc(100% - 52px);
+  box-shadow:0 1px 2px rgba(28,36,49,.07);
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
+.msg.first .bub{ border-radius:4px 18px 18px 18px; }
+.bub.lead{ font-size:var(--fs-lead); font-weight:700; letter-spacing:.01em; }
+.bub.note{ background:#FBF6E6; border:1px solid #EBDCAE; font-size:16.5px; }
+
+/* 画像 */
+.figwrap{ max-width:calc(100% - 52px); flex:1 1 auto; }
+.fig{
+  position:relative; margin:0;
+  border-radius:14px; overflow:hidden;
+  background:var(--bubble);
+  box-shadow:0 1px 3px rgba(28,36,49,.10);
+  border:1px solid var(--line);
+}
+.fig img{ display:block; width:100%; height:auto; }
+.fig figcaption{
+  padding:9px 13px; font-size:14.5px; color:var(--ink-sub);
+  border-top:1px solid var(--line); line-height:1.6;
+}
+.ph{
+  width:100%;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+  background:repeating-linear-gradient(45deg,#E3E7EC 0 12px,#DDE2E8 12px 24px);
+  color:#8A94A2;
+}
+.ph b{ font-family:"Shippori Mincho B1",serif; font-size:30px; color:#6E7986; line-height:1.2; }
+.ph span{ font-size:13px; letter-spacing:.06em; }
+.idbadge{
+  position:absolute; right:8px; bottom:8px;
+  background:rgba(28,36,49,.82); color:#fff;
+  font-size:12px; letter-spacing:.1em; padding:3px 8px; border-radius:6px;
+  display:none;
+}
+body.shownum .idbadge{ display:block; }
+
+/* ===== 下の選択ボタン ===== */
+#choices{
+  position:sticky; bottom:0; z-index:20;
+  background:linear-gradient(to bottom,rgba(237,239,242,0),var(--paper) 22%);
+  padding:18px 16px 14px;
+  display:flex; flex-direction:column; gap:10px;
+}
+.ch{
+  min-height:var(--btn-h); width:100%;
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  background:var(--indigo); color:#fff;
+  border:0; border-radius:12px; padding:12px 18px;
+  font-family:"Zen Kaku Gothic New",sans-serif;
+  font-size:17.5px; font-weight:700; line-height:1.5;
+  text-align:left; cursor:pointer;
+  box-shadow:0 2px 0 var(--indigo-d);
+  transition:transform .08s ease;
+}
+.ch:active{ transform:translateY(2px); box-shadow:0 0 0 var(--indigo-d); }
+.ch::after{ content:"›"; font-size:22px; opacity:.65; }
+.ch.sub{ background:#fff; color:var(--indigo); border:1.5px solid var(--indigo); box-shadow:0 2px 0 var(--line); font-weight:500; font-size:16.5px; }
+.ch.quiet{ background:transparent; color:var(--ink-sub); border:1.5px solid var(--line); box-shadow:none; font-weight:500; font-size:16px; min-height:50px; }
+.ch:focus-visible{ outline:3px solid var(--gold); outline-offset:3px; }
+
+/* ===== 下の小さなリンク ===== */
+#tools{
+  padding:4px 16px calc(20px + env(safe-area-inset-bottom));
+  display:flex; justify-content:center; gap:18px;
+  font-size:13px; color:var(--ink-sub); background:var(--paper);
+}
+#tools button{
+  background:none; border:0; color:var(--ink-sub);
+  font-size:13px; text-decoration:underline; cursor:pointer;
+  font-family:inherit; padding:6px;
+}
+
+/* ===== 全文表示・FAQ ===== */
+.doc{ padding:8px 2px 10px; }
+.doc h2{
+  font-family:"Shippori Mincho B1",serif;
+  font-size:21px; margin:34px 0 14px; padding-bottom:8px;
+  border-bottom:2px solid var(--indigo);
+}
+.doc h2:first-child{ margin-top:6px; }
+.doc .qa{ background:#fff; border-radius:12px; padding:16px 18px; margin:0 0 12px; box-shadow:0 1px 2px rgba(28,36,49,.06); }
+.doc .qa b{ display:block; margin-bottom:6px; color:var(--indigo); font-size:17px; }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <header>
+    <div class="hd-row">
+      <button class="hd-back" id="back" aria-label="まえにもどる">&lsaquo;</button>
+      <div class="hd-title">はじめてガイド<small>キニナルメーカー</small></div>
+      <div class="hd-step" id="step"></div>
+    </div>
+    <div class="hd-bar"><i id="bar"></i></div>
+  </header>
+
+  <main id="chat"></main>
+  <div id="choices"></div>
+  <div id="tools">
+    <button id="tgnum">画像番号を表示</button>
+    <button id="tgtop">さいしょから</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   ▼▼▼ ここだけ編集すればOK ▼▼▼
+   ============================================================
+
+   ● 画像について
+     画像は  tutorial/images/  フォルダに入れてください。
+     ファイル名は  g-11.png  のように「g-」＋番号 です。
+       11番  → tutorial/images/g-11.png
+       18b番 → tutorial/images/g-18b.png
+     .png が無ければ .webp .jpg も自動でさがします。
+     画像がまだ無いときは、番号入りの灰色の枠が出ます。
+
+   ● 書き方
+     { b:"文章" }              … 吹き出し
+     { b:"文章", lead:true }   … 大きい太字の吹き出し
+     { b:"文章", note:true }   … 黄色い補足の吹き出し
+     { img:"11", cap:"説明" }  … 画像（capは省略できます）
+     { c:[ {t:"ボタンの文字", go:"とび先のID"} ] } … 選択ボタン
+
+     ボタンの見た目：
+       style:"sub"   … 白いボタン
+       style:"quiet" … 目立たないボタン
+       href:"..."    … 外部リンクにする
+
+     文章のなかで改行したいときは \n と書いてください。
+
+   ============================================================ */
+
+const IMG_DIR = "/tutorial/images/";  /* 画像フォルダの場所（絶対パス） */
+const AVATAR  = "";                   /* アイコン画像。例："/tutorial/images/g-avatar.png" */
+
+/* 進み具合の計算と「ぜんぶ一気に読む」に使う順番 */
+const FULL_ORDER = [
+ "S00","S01",
+ "R1-01","R1-02","R1-03","R1-04","R1-04b","R1-05","R1-06","R1-07","R1-08","R1-09","R1-10",
+ "R1-11","R1-11b","R1-11c","R1-11d","R1-11e","R1-11f","R1-11g","R1-11h","R1-11i","R1-12",
+ "R2-01","R2-02","R2-02b","R2-03","R2-04","R2-05","R2-06",
+ "R3-01","R3-02","R3-02b","R3-02c","R3-02d","R3-02e","R3-02f","R3-02g","R3-02h","R3-02i",
+ "R3-02j","R3-02k","R3-02m","R3-02n",
+ "R3-03","R3-03b","R3-03c","R3-04","R3-05","R3-06","R3-07","R3-08","R3-08b","R3-08c","R3-08d",
+ "R3-09","R3-10",
+ "R4-01","R4-02"
+];
+
+/* ============================================================
+   会話のスクリプト
+   ============================================================ */
+const SCRIPT = {
+
+/* ===== 導入 ===================================== */
+"S00":[
+  { b:"はじめまして。\nキニナルメーカーです。", lead:true },
+  { img:"01", cap:"あなたの言葉を、読まれる形に。" },
+  { b:"このガイドは、上から順にタップしていくだけで\n使い方がわかるようになっています。" },
+  { b:"3分ほどで終わります。\nどうぞ気楽に読んでみてください。" },
+  { c:[
+    { t:"はじめる", go:"S01" },
+    { t:"ぜんぶ一気に読む", go:"__ALL__", style:"quiet" }
+  ]}
+],
+
+"S01":[
+  { b:"さいしょに、ひとつだけ質問です。" },
+  { b:"あなたが今いちばんやりたいことは、\nどちらですか？", lead:true },
+  { c:[
+    { t:"自分の投稿を、もっと伸ばしたい", go:"R1-01" },
+    { t:"有料noteを買ってもらいたい", go:"R2-01", style:"sub" },
+    { t:"まだ、よく分からない", go:"S02", style:"quiet" }
+  ]}
+],
+
+"S02":[
+  { b:"だいじょうぶです。" },
+  { b:"このツールは、大きく2つのことができます。" },
+  { img:"02", cap:"ぜんたいの流れ" },
+  { b:"まずは「投稿を伸ばす」から見てみましょう。" },
+  { b:"noteの話は、あとからかならず出てきます。" },
+  { c:[{ t:"わかりました", go:"R1-01" }]}
+],
+
+/* ===== ルート① わたしの投稿を、強くする ========= */
+"R1-01":[
+  { b:"ではさっそく。" },
+  { b:"いま、Threadsに投稿しようとしている\n文章はありますか？", lead:true },
+  { c:[
+    { t:"ある", go:"R1-03" },
+    { t:"まだ書いていない", go:"R1-02", style:"sub" }
+  ]}
+],
+
+"R1-02":[
+  { b:"書けていなくて、大丈夫です。" },
+  { b:"うまい文章を書く必要はありません。" },
+  { b:"たとえば、こんなメモでもじゅうぶんです。" },
+  { b:"「今日はうまくいかなかった。\nでも一つだけ気づいたことがある」", note:true },
+  { b:"このツールは、ゼロから作るものではありません。" },
+  { b:"あなたの中にすでにある言葉を\n「読まれる形」に組みなおす道具です。" },
+  { c:[{ t:"なるほど", go:"R1-03" }]}
+],
+
+"R1-03":[
+  { b:"画面のうえに、3つのボタンが並んでいます。" },
+  { b:"いちばん左を押してください。" },
+  { img:"11", cap:"ここに、あなたの文章を貼り付けます" },
+  { b:"箇条書きでも、話し言葉でも、かまいません。" },
+  { c:[{ t:"貼りました", go:"R1-04" }]}
+],
+
+"R1-04":[
+  { b:"つぎに、4つの四角い絵が出てきます。" },
+  { img:"12", cap:"どんな形の投稿にするかを選びます" },
+  { b:"迷ったときは、左上を選んでください。" },
+  { b:"いちばんよく使う、ふつうの形です。" },
+  { c:[
+    { t:"選んだ", go:"R1-05" },
+    { t:"4つのちがいを知りたい", go:"R1-04b", style:"sub" }
+  ]}
+],
+
+"R1-04b":[
+  { b:"かんたんに説明しますね。" },
+  { b:"ひとつの投稿で完結させるか、\n続きをコメント欄に分けるか。" },
+  { b:"この2つの組み合わせだと思ってください。" },
+  { b:"長い話をしたいときは、\n続きを分ける形が向いています。" },
+  { b:"途中で「続きはコメント欄へ」としたほうが、\n読んでいる人が最後まで追いかけてくれるからです。" },
+  { c:[{ t:"わかりました", go:"R1-05" }]}
+],
+
+"R1-05":[
+  { b:"あとは、このボタンを押すだけです。" },
+  { img:"13", cap:"押すと、AIが考えはじめます" },
+  { img:"14", cap:"順番に進んでいきます" },
+  { b:"少しだけ待ってください。" },
+  { b:"文章を作ったあと、もういちど自分で読み直して、\n直すところがないかをチェックしています。" },
+  { c:[{ t:"できました", go:"R1-06" }]}
+],
+
+"R1-06":[
+  { b:"でました。", lead:true },
+  { img:"15", cap:"上に点数、下に新しい文章が出ています" },
+  { b:"まずは、点数の読み方からいきましょう。" },
+  { c:[{ t:"はい", go:"R1-07" }]}
+],
+
+"R1-07":[
+  { b:"点数は5つあります。" },
+  { img:"16", cap:"5つの観点で採点されます" },
+  { b:"① フック力\n1行目で、指が止まるかどうか。", lead:true },
+  { b:"タイムラインは、ものすごい速さで流れていきます。" },
+  { b:"最初の一行で止まらなければ、中身は読まれません。" },
+  { b:"いちばん大事な点数です。" },
+  { c:[{ t:"つぎへ", go:"R1-08" }]}
+],
+
+"R1-08":[
+  { b:"② 共感度\n「これ、自分のことだ」と思ってもらえるか。", lead:true },
+  { b:"③ 構成力\n読みはじめてから最後まで、\n途中で離れずに読めるか。", lead:true },
+  { b:"④ 拡散性\n人に見せたくなるか、保存したくなるか。", lead:true },
+  { b:"⑤ 文化適合\nThreadsという場所になじむ\n書き方になっているか。", lead:true },
+  { c:[{ t:"つぎへ", go:"R1-09" }]}
+],
+
+"R1-09":[
+  { b:"ここで、ひとつだけお伝えしたいことがあります。" },
+  { b:"点数が低くても、落ち込まないでください。" },
+  { b:"あなたの話に価値がないのではありません。" },
+  { b:"ただ「立ち止まってもらう工夫」が\n足りていないだけです。" },
+  { b:"そこは、ここから直せます。", note:true },
+  { c:[{ t:"つぎへ", go:"R1-10" }]}
+],
+
+"R1-10":[
+  { b:"点数の下に、こんな文章が出ています。" },
+  { img:"17", cap:"どこが弱いのか、なぜそう思ったのかが書かれています" },
+  { b:"ここは、読むだけで大丈夫です。" },
+  { b:"直した文章は、すぐ下に出ています。" },
+  { c:[{ t:"つぎへ", go:"R1-11" }]}
+],
+
+/* --- ずるい一言 --- */
+"R1-11":[
+  { b:"ここで、もう一段だけ強くする方法があります。" },
+  { img:"18", cap:"「ずるい一言」のスイッチ" },
+  { b:"このスイッチを入れてみてください。" },
+  { b:"「ずるい一言」といいます。", lead:true },
+  { c:[{ t:"押してみた", go:"R1-11b" }]}
+],
+
+"R1-11b":[
+  { b:"押すと、1行目だけが3つ出てきます。" },
+  { img:"18b", cap:"出だしの一行が、3案ならびます" },
+  { b:"本文はそのままで、出だしだけを変える機能です。" },
+  { b:"なぜ1行目だけ、わざわざ別にしているのか。" },
+  { b:"理由があります。" },
+  { c:[{ t:"聞きたい", go:"R1-11c" }]}
+],
+
+"R1-11c":[
+  { b:"人がタイムラインを見るとき、\n親指はほとんど止まりません。" },
+  { b:"シュッ、シュッと流していきます。" },
+  { b:"そのあいだ、目に入っているのは\nほぼ1行目だけです。" },
+  { b:"つまり、投稿の中身がどれだけ良くても、\n1行目で止まらなければ\n存在しないのと同じです。", note:true },
+  { b:"だから、ここだけを切り離して考えます。" },
+  { c:[{ t:"つぎへ", go:"R1-11d" }]}
+],
+
+"R1-11d":[
+  { b:"3つの案は、それぞれちがう狙いで作られています。" },
+  { b:"ひとつめ｜ひっくり返す", lead:true },
+  { b:"「がんばるのを、やめました」", note:true },
+  { b:"ふつうと逆のことを言うと、\n人は「え？」と手を止めます。" },
+  { c:[{ t:"つぎへ", go:"R1-11e" }]}
+],
+
+"R1-11e":[
+  { b:"ふたつめ｜数字を置く", lead:true },
+  { b:"「3週間で、やっと分かった」", note:true },
+  { b:"数字があると、話がぐっと具体的になります。" },
+  { b:"ぼんやりした話は流されますが、\n具体的な話は確かめたくなります。" },
+  { c:[{ t:"つぎへ", go:"R1-11f" }]}
+],
+
+"R1-11f":[
+  { b:"みっつめ｜気持ちを出す", lead:true },
+  { b:"「正直、ちょっと悔しかった」", note:true },
+  { b:"うれしい、悔しい、こわい。" },
+  { b:"気持ちが入った言葉は、読む人の心が動きます。" },
+  { b:"心が動くと、指が止まります。" },
+  { c:[{ t:"つぎへ", go:"R1-11g" }]}
+],
+
+"R1-11g":[
+  { b:"3つのうち、どれを選ぶか。" },
+  { b:"迷ったときの決め方をお伝えします。" },
+  { b:"声に出して読んでみて、\n自分でも「え？」と思ったもの。" },
+  { b:"それを選んでください。" },
+  { b:"自分が引っかからない言葉は、\n人も引っかかりません。", note:true },
+  { c:[{ t:"つぎへ", go:"R1-11h" }]}
+],
+
+"R1-11h":[
+  { b:"ただし、ひとつだけ注意があります。" },
+  { b:"1行目と中身がかけ離れていると、\n読んだ人は「だまされた」と感じます。" },
+  { b:"いちど失った信用は、なかなか戻りません。" },
+  { b:"強い言葉を選ぶときほど、\n中身がそれに見合っているかを\nひと呼吸おいて確かめてください。" },
+  { c:[{ t:"つぎへ", go:"R1-11i" }]}
+],
+
+"R1-11i":[
+  { b:"もうひとつ。" },
+  { b:"毎回、毎回、同じ強さで叫んでいると、\nだんだん効かなくなります。" },
+  { b:"静かな投稿があるから、強い言葉が目立ちます。" },
+  { b:"ここぞ、というときに使ってください。" },
+  { c:[{ t:"つぎへ", go:"R1-12" }]}
+],
+
+"R1-12":[
+  { b:"できあがりました。", lead:true },
+  { img:"19", cap:"このボタンで、文章がコピーされます" },
+  { b:"あとはThreadsを開いて、貼り付けるだけです。" },
+  { b:"おつかれさまでした。\nこれが基本の流れです。" },
+  { c:[
+    { t:"つづきを見る（大事な話があります）", go:"R3-01" },
+    { t:"noteを売る方法も見たい", go:"R2-01", style:"sub" }
+  ]}
+],
+
+/* ===== ルート② noteを読みたくさせる ============= */
+"R2-01":[
+  { b:"ここからは、有料noteを持っている方向けの話です。" },
+  { b:"さいしょに、大事なことをお伝えします。" },
+  { b:"Threadsは、外にリンクで出ていくことを\nあまり好みません。" },
+  { b:"リンクを貼った投稿ばかりだと、\nだんだん見られなくなります。" },
+  { b:"ですからこのツールは、\n「リンクを押させる投稿」ではなく\n「読みたくさせる投稿」を作るように\n設計されています。", note:true },
+  { c:[{ t:"つづける", go:"R2-02" }]}
+],
+
+"R2-02":[
+  { b:"画面のうえのボタン、まんなかを押してください。" },
+  { b:"ここでやるのは、あなたのnoteの中から\n「人が気になる部分」を見つけ出す作業です。" },
+  { b:"まず、noteの共有リンクが必要です。" },
+  { img:"21", cap:"noteの画面で共有リンクを作ります" },
+  { c:[
+    { t:"共有リンクの作り方を見る", go:"R2-02b" },
+    { t:"もう持っている", go:"R2-03", style:"sub" }
+  ]}
+],
+
+"R2-02b":[
+  { b:"noteで、その記事を複製すると\n「共有リンクをコピー」が出てきます。" },
+  { b:"そこを押して、リンクをコピーしてください。" },
+  { b:"うまくいかないときは、\n記事のファイルをそのまま送ることもできます。" },
+  { b:"txt、docx、pdf に対応しています。", note:true },
+  { c:[{ t:"できました", go:"R2-03" }]}
+],
+
+"R2-03":[
+  { b:"ここに貼り付けて、ボタンを押します。" },
+  { img:"22", cap:"共有リンクを貼るところ" },
+  { b:"しばらくすると、5つの案が出てきます。" },
+  { img:"23", cap:"5つの素案がならびます" },
+  { c:[{ t:"つぎへ", go:"R2-04" }]}
+],
+
+"R2-04":[
+  { b:"この5つは、ただの記事の要約ではありません。" },
+  { b:"それぞれに\n「読む人が困っていること」と\n「まだ言っていないこと」が仕込まれています。" },
+  { b:"ぜんぶ説明してしまうと、\n人は読み終わった気持ちになります。" },
+  { b:"あえて残すことで、\n「続きが知りたい」が生まれます。", note:true },
+  { c:[{ t:"つぎへ", go:"R2-05" }]}
+],
+
+"R2-05":[
+  { b:"気に入った案をタップしてください。" },
+  { img:"24", cap:"そのまま投稿文づくりへ進めます" },
+  { b:"「投稿文作成へ進む」を押すと、\nさっきの「わたしの投稿を、強くする」画面に移ります。" },
+  { b:"あとは、ひとつめの使い方と同じです。" },
+  { c:[
+    { t:"ひとつめをまだ見ていない", go:"R1-03", style:"sub" },
+    { t:"見た", go:"R2-06" }
+  ]}
+],
+
+"R2-06":[
+  { b:"もうひとつ、使える機能があります。" },
+  { img:"25", cap:"24時間で消える、こっそり投稿" },
+  { b:"「期間限定」「今だけ」という空気は、\n人の背中を押します。" },
+  { b:"消えることが分かっていると、\n人は今すぐ見ようとします。" },
+  { b:"ここぞ、というときに使ってみてください。" },
+  { c:[{ t:"つぎへ", go:"R3-01" }]}
+],
+
+/* ===== 共通ブロック ============================= */
+"R3-01":[
+  { b:"ここからは、どちらの使い方でも共通の話です。" },
+  { b:"4つあります。" },
+  { b:"① あなたらしさを覚えさせる\n② 結果を記録して、育てる\n③ 時間を決めて投稿する\n④ 作った文章を保存する", lead:true },
+  { c:[{ t:"順番に見る", go:"R3-02" }]}
+],
+
+/* --- ① 文体学習・ナレッジ調整 --- */
+"R3-02":[
+  { b:"① あなたらしさを覚えさせる", lead:true },
+  { img:"34", cap:"「あなたの個性を演出」の画面" },
+  { b:"ここでやることは、2つあります。" },
+  { b:"ひとつは、あなたの書きぐせを覚えさせること。" },
+  { b:"もうひとつは、文章の味つけを決めることです。" },
+  { c:[{ t:"順番に見る", go:"R3-02b" }]}
+],
+
+"R3-02b":[
+  { b:"まず、書きぐせのほうから。" },
+  { img:"34b", cap:"あなたのnoteのURLを読み込ませます" },
+  { b:"ここに、あなたのnoteのURLを貼って読み込ませます。" },
+  { b:"すると、あなたがふだん使っている言葉づかいを\n覚えてくれます。" },
+  { c:[
+    { t:"何を覚えるの？", go:"R3-02c" },
+    { t:"先に進む", go:"R3-02g", style:"quiet" }
+  ]}
+],
+
+"R3-02c":[
+  { b:"たとえば、こんなところです。" },
+  { b:"・文の長さ\n　短く切るか、長くつなぐか\n\n・語尾\n　「です」か「だ」か、「〜ですよね」を使うか\n\n・改行のリズム\n\n・よく出てくる言い回し" },
+  { b:"こういった、自分では気づいていない小さなクセです。" },
+  { c:[{ t:"つぎへ", go:"R3-02d" }]}
+],
+
+"R3-02d":[
+  { b:"なぜ、これが大事なのか。" },
+  { b:"AIが作った文章は、そのままだと\nどこか他人行儀で、「機械っぽさ」が残ります。" },
+  { b:"読む人は、その匂いに敏感です。" },
+  { b:"いくら中身が良くても、\n「これ、書いてないな」と感じられた時点で、\n心は閉じてしまいます。", note:true },
+  { c:[{ t:"つぎへ", go:"R3-02e" }]}
+],
+
+"R3-02e":[
+  { b:"あなたの言葉づかいを覚えさせておくと、\n出てくる文章が「自分が書きそうな文章」に近づきます。" },
+  { b:"そのぶん、直す手間もぐっと減ります。" },
+  { b:"さいしょに一度だけやっておくことを\nおすすめします。" },
+  { b:"この作業は、回数を消費しません。", note:true },
+  { c:[{ t:"つぎへ", go:"R3-02f" }]}
+],
+
+"R3-02f":[
+  { b:"ひとつ、補足です。" },
+  { b:"読み込ませる記事は、自分でも気に入っているもの、\n反応がよかったものを選んでください。" },
+  { b:"いちばん自分らしく書けた記事が、\nいちばん良い見本になります。" },
+  { b:"書き方が変わってきたと感じたら、\nそのときにまた読み込ませ直せば大丈夫です。" },
+  { c:[{ t:"つぎへ（味つけの話）", go:"R3-02g" }]}
+],
+
+"R3-02g":[
+  { b:"つぎは、味つけです。" },
+  { img:"34c", cap:"7つのつまみで、文章の傾向を変えられます" },
+  { b:"強くすると、その要素が濃く出ます。" },
+  { b:"ぜんぶ強くすればいい、というものではありません。" },
+  { b:"ぜんぶ濃い料理が、おいしくないのと同じです。", note:true },
+  { c:[
+    { t:"ひとつずつ知りたい", go:"R3-02h" },
+    { t:"とりあえず標準でいい", go:"R3-02m", style:"sub" }
+  ]}
+],
+
+"R3-02h":[
+  { b:"① フック力", lead:true },
+  { b:"1行目の強さです。" },
+  { b:"断言する、問いかける、本音を出す。" },
+  { b:"強くすると、出だしで止めにいく文章になります。" },
+  { b:"② ライティング技法", lead:true },
+  { b:"読みやすさです。" },
+  { b:"改行のリズム、短い文と長い文の混ぜ方が整います。" },
+  { c:[{ t:"つぎへ", go:"R3-02i" }]}
+],
+
+"R3-02i":[
+  { b:"③ 共感・感情", lead:true },
+  { b:"「これ、私のことだ」と思わせる度合いです。" },
+  { b:"強くすると、「私も昔そうでした」という\n寄り添う書き方が増えます。" },
+  { b:"この書き方が苦手な方は、弱くしてください。", note:true },
+  { b:"④ 欲望設計", lead:true },
+  { b:"「続きが知りたい」をつくる度合いです。" },
+  { b:"強くすると、あえて全部を言わずに残す書き方になります。" },
+  { c:[{ t:"つぎへ", go:"R3-02j" }]}
+],
+
+"R3-02j":[
+  { b:"⑤ 認知・集客", lead:true },
+  { b:"フォローされることを意識した書き方です。" },
+  { b:"強くすると、プロフィールを見に行きたくなる作りになります。" },
+  { b:"⑥ こっそり感", lead:true },
+  { b:"24時間で消える投稿に合った書き方です。" },
+  { b:"秘密を打ち明けるようなトーンが出ます。" },
+  { c:[{ t:"つぎへ", go:"R3-02k" }]}
+],
+
+"R3-02k":[
+  { b:"⑦ 専門性・差別化", lead:true },
+  { b:"「この人は詳しい人だ」と伝わる書き方です。" },
+  { b:"強くすると、あなたの発信テーマと\n軸のそろった内容になります。" },
+  { c:[{ t:"つぎへ", go:"R3-02m" }]}
+],
+
+"R3-02m":[
+  { b:"迷ったときは、「バランス型」を選んでください。" },
+  { b:"いちばん失敗しません。" },
+  { b:"そのうえで、ひとつだけおすすめの使い方を。" },
+  { b:"変えるときは、一度にひとつだけにしてください。", note:true },
+  { c:[{ t:"なぜ？", go:"R3-02n" }]}
+],
+
+"R3-02n":[
+  { b:"いっぺんに3つ変えると、\n結果が良くなっても悪くなっても、\nどれが効いたのか分からなくなります。" },
+  { b:"ひとつ変える。しばらく投稿してみる。" },
+  { b:"そして、次の話につながります。" },
+  { c:[{ t:"つぎへ", go:"R3-03" }]}
+],
+
+/* --- ② フィードバック --- */
+"R3-03":[
+  { b:"② 結果を記録して、育てる", lead:true },
+  { b:"ここが、このツールでいちばん差がつくところです。" },
+  { b:"そして、いちばん後回しにされがちなところでもあります。" },
+  { img:"33", cap:"フィードバックを入れる画面" },
+  { c:[{ t:"つづける", go:"R3-03b" }]}
+],
+
+"R3-03b":[
+  { b:"まず、やることを先にお伝えします。" },
+  { b:"投稿してから、半日ほど経ったら\nこの画面をひらいて、3つの数字を入れるだけです。" },
+  { b:"・見られた数\n・いいねの数\n・コメントの数", lead:true },
+  { b:"1分もかかりません。" },
+  { c:[
+    { t:"数字はどこで見るの？", go:"R3-03c" },
+    { t:"分かった", go:"R3-04", style:"sub" }
+  ]}
+],
+
+"R3-03c":[
+  { b:"Threadsで、自分の投稿をひらいてください。" },
+  { img:"37", cap:"投稿のすぐ下に、数字が並んでいます" },
+  { b:"それを、そのまま写すだけです。" },
+  { c:[{ t:"分かりました", go:"R3-04" }]}
+],
+
+"R3-04":[
+  { b:"入れると、その場で点数と評価が出ます。" },
+  { b:"でも、大事なのはそこではありません。" },
+  { b:"この数字がたまっていくことに、意味があります。", note:true },
+  { c:[{ t:"つぎへ", go:"R3-05" }]}
+],
+
+"R3-05":[
+  { b:"どういうことか。" },
+  { b:"世の中には、「こう書けば伸びる」というやり方が、\nたくさんあります。" },
+  { b:"どれも間違いではありません。" },
+  { b:"でも、それはその人のアカウントで\nうまくいった方法です。" },
+  { c:[{ t:"つぎへ", go:"R3-06" }]}
+],
+
+"R3-06":[
+  { b:"あなたを見ている人と、その人を見ている人は、\nちがう人たちです。" },
+  { b:"届く言葉も、響く時間帯も、ちがいます。" },
+  { b:"だから本当に必要なのは、\nあなたのアカウントで何が効いたか、という記録です。" },
+  { b:"それは、世界のどこにも売っていません。\nあなたにしか作れません。", note:true },
+  { c:[{ t:"つぎへ", go:"R3-07" }]}
+],
+
+"R3-07":[
+  { b:"記録がたまってくると、こんなことが見えてきます。" },
+  { b:"・夜に出したほうが伸びる\n\n・数字を入れた投稿は反応がいい\n\n・長い文章より、短く言い切ったほうが届く" },
+  { b:"あなただけの傾向です。" },
+  { c:[{ t:"つぎへ", go:"R3-08" }]}
+],
+
+"R3-08":[
+  { b:"そして、ここからが本番です。" },
+  { img:"36", cap:"記録がたまっていきます" },
+  { b:"この記録は、次に文章を作るときに使われます。" },
+  { b:"つまり、使えば使うほど\nこのツールは「あなた専用」になっていきます。" },
+  { b:"最初の1回と、30回目とでは、\n出てくる文章が変わります。", note:true },
+  { c:[{ t:"つぎへ", go:"R3-08b" }]}
+],
+
+"R3-08b":[
+  { b:"ひとつ、大事なお願いを。" },
+  { b:"伸びなかった投稿こそ、記録してください。", lead:true },
+  { b:"人は、うまくいかなかったものを見たくないものです。" },
+  { b:"そっと閉じたくなります。" },
+  { b:"でも、伸びた投稿だけを入れていると、\n「何がダメだったのか」を学べません。" },
+  { c:[{ t:"つぎへ", go:"R3-08c" }]}
+],
+
+"R3-08c":[
+  { b:"うまくいかなかった記録は、失敗ではありません。" },
+  { b:"材料です。", lead:true },
+  { b:"伸びた投稿と、伸びなかった投稿。" },
+  { b:"その両方があってはじめて、\nあなたの「勝ちパターン」がはっきりしてきます。" },
+  { c:[{ t:"つぎへ", go:"R3-08d" }]}
+],
+
+"R3-08d":[
+  { b:"この記録も、回数を消費しません。" },
+  { b:"何度入れても無料です。" },
+  { b:"週に一度でも、思い出したときでもかまいません。" },
+  { b:"完璧にやろうとせず、続けられるペースで。" },
+  { b:"たまっていくこと自体が、あなたの財産になります。", note:true },
+  { c:[{ t:"つぎへ", go:"R3-09" }]}
+],
+
+/* --- ③ 予約投稿 --- */
+"R3-09":[
+  { b:"③ 時間を決めて投稿する", lead:true },
+  { img:"31", cap:"会員情報ページの「Threadsと連携する」" },
+  { b:"さいしょに一度だけ、Threadsとつなぐ作業が必要です。" },
+  { b:"会員情報のページにあるこのボタンを押して、\nThreadsの画面で「許可」を押すだけです。" },
+  { img:"32", cap:"日づけと時間を決めておきます" },
+  { b:"あとは、その時間に自動で投稿されます。" },
+  { b:"つないだあとは、60日ごとに更新が必要です。\n期限が近づいたら、同じページで押しなおすだけです。", note:true },
+  { c:[{ t:"つぎへ", go:"R3-10" }]}
+],
+
+/* --- ④ 保存 --- */
+"R3-10":[
+  { b:"④ 作った文章を保存する", lead:true },
+  { img:"35", cap:"紫色のボタンから保存できます" },
+  { b:"Obsidianというアプリに保存できます。" },
+  { b:"お使いでない方は、ファイルとしてダウンロードもできます。" },
+  { b:"使わなくても問題ありません。" },
+  { c:[{ t:"つぎへ", go:"R4-01" }]}
+],
+
+/* ===== 料金とおわり ============================= */
+"R4-01":[
+  { b:"さいごに、料金の話です。" },
+  { b:"月に1,980円で、300回ぶん使えます。" },
+  { b:"使いきれなかった分は、翌月にくりこせます。" },
+  { b:"さきほどお話しした\n\n・文体を覚えさせる\n・結果を記録する\n・下書きを保存する\n\nこの3つは、回数を消費しません。", note:true },
+  { c:[{ t:"つぎへ", go:"R4-02" }]}
+],
+
+"R4-02":[
+  { b:"以上で、ガイドは終わりです。" },
+  { b:"おつかれさまでした。", lead:true },
+  { b:"さいごに、ひとつだけ。" },
+  { b:"伸びる投稿に、決まった正解はありません。" },
+  { b:"あるとすれば、\n読む人のことを思って書かれているかどうか、\nそれだけです。" },
+  { b:"このツールは、その手伝いをするために作りました。" },
+  { b:"あなたの言葉が、\n必要としている人に届きますように。", lead:true },
+  { c:[
+    { t:"さっそく使ってみる", href:"https://notti.jp/" },
+    { t:"よくある質問を見る", go:"__FAQ__", style:"sub" },
+    { t:"もういちど見る", go:"S00", style:"quiet" }
+  ]}
+]
+
+};
+
+/* ============================================================
+   よくある質問（ここも自由に書きかえられます）
+   ============================================================ */
+const FAQ = [
+  ["スマホからでも使えますか？","はい。スマホのブラウザ（SafariやChromeなど）からそのまま使えます。アプリを入れる必要はありません。"],
+  ["自分で書いた文章を、点数だけ見ることもできますか？","はい。文章を貼り付けて「採点する」を押すだけでOKです。"],
+  ["どんなファイルが使えますか？","noteの共有リンクを貼るのがいちばん簡単です。ファイルの場合は .txt、.docx、.pdf に対応しています。"],
+  ["やめたくなったら、解約できますか？","いつでも解約できます。会員情報の「サブスクリプションを管理する」から手続きできます。お問い合わせフォームからのご連絡でも大丈夫です。"],
+  ["予約投稿を使うには、何が必要ですか？","会員情報ページからThreadsアカウントをつなぐだけです。つないだあとは、投稿文の「予約投稿」ボタンから日時を決められます。"],
+  ["回数が足りなくなったら？","追加で買い足せます。100回で1,200円、200回で2,200円、300回で3,000円です。"]
+];
+
+/* ============================================================
+   ▲▲▲ 編集はここまで ▲▲▲
+   ここから下は、動かすためのしくみです。
+   ============================================================ */
+
+const $chat = document.getElementById("chat");
+const $ch   = document.getElementById("choices");
+const $step = document.getElementById("step");
+const $bar  = document.getElementById("bar");
+const $back = document.getElementById("back");
+
+const EXTS = ["png","webp","jpg","jpeg"];
+const hist = [];
+let current = null;
+
+/* --- 保存（使えない環境では何もしない） --- */
+const store = {
+  get(k){ try{ return window.localStorage.getItem(k); }catch(e){ return null; } },
+  set(k,v){ try{ window.localStorage.setItem(k,v); }catch(e){} }
+};
+
+/* --- 画像を作る（無いときは番号入りの枠） --- */
+function makeFigure(id, cap){
+  const wrap = document.createElement("div");
+  wrap.className = "msg";
+  wrap.innerHTML = '<div class="av hide"></div>';
+
+  const box = document.createElement("div");
+  box.className = "figwrap";
+
+  const fig = document.createElement("figure");
+  fig.className = "fig";
+  fig.style.margin = "0";
+
+  const img = document.createElement("img");
+  img.alt = cap || ("画像 " + id);
+  img.loading = "lazy";
+  let i = 0;
+  img.onerror = function(){
+    i++;
+    if (i < EXTS.length){ img.src = IMG_DIR + "g-" + id + "." + EXTS[i]; return; }
+    /* ぜんぶ無ければ、灰色の枠にする */
+    const ph = document.createElement("div");
+    ph.className = "ph";
+    ph.style.aspectRatio = "4 / 3";
+    ph.innerHTML = "<b>" + id + "</b><span>画像を入れてください</span><span>images/g-" + id + ".png</span>";
+    img.replaceWith(ph);
+  };
+  img.src = IMG_DIR + "g-" + id + "." + EXTS[0];
+  fig.appendChild(img);
+
+  if (cap){
+    const fc = document.createElement("figcaption");
+    fc.textContent = cap;
+    fig.appendChild(fc);
+  }
+  const badge = document.createElement("span");
+  badge.className = "idbadge";
+  badge.textContent = "IMG-" + id;
+  fig.appendChild(badge);
+
+  box.appendChild(fig);
+  wrap.appendChild(box);
+  return wrap;
+}
+
+/* --- 吹き出しを作る --- */
+function makeBubble(item, isFirst){
+  const wrap = document.createElement("div");
+  wrap.className = "msg" + (isFirst ? " first" : "");
+  const av = document.createElement("div");
+  av.className = "av" + (isFirst ? "" : " hide");
+  if (isFirst){
+    if (AVATAR){ av.innerHTML = '<img src="'+AVATAR+'" alt="">'; }
+    else { av.textContent = "キ"; }
+  }
+  const b = document.createElement("div");
+  b.className = "bub" + (item.lead ? " lead" : "") + (item.note ? " note" : "");
+  b.textContent = item.b;
+  wrap.appendChild(av);
+  wrap.appendChild(b);
+  return wrap;
+}
+
+/* --- 進み具合 --- */
+let lastProgress = 0;
+function updateProgress(id){
+  const i = FULL_ORDER.indexOf(id);
+  if (i >= 0) lastProgress = i + 1;
+  const total = FULL_ORDER.length;
+  $step.textContent = lastProgress + " / " + total;
+  $bar.style.width = Math.round(lastProgress / total * 100) + "%";
+}
+
+/* --- 1ブロックを表示 --- */
+let revealTimers = [];
+function clearTimers(){ revealTimers.forEach(clearTimeout); revealTimers = []; }
+
+function show(id, push){
+  if (id === "__ALL__") return showAll();
+  if (id === "__FAQ__") return showFaq();
+  const block = SCRIPT[id];
+  if (!block){ console.warn("ブロックが見つかりません: " + id); return; }
+
+  if (push && current) hist.push(current);
+  current = id;
+  $ch.dataset.done = "";
+  store.set("kn_guide_pos", id);
+  clearTimers();
+  $chat.innerHTML = "";
+  $ch.innerHTML = "";
+  updateProgress(id);
+  $back.disabled = hist.length === 0;
+  window.scrollTo(0, 0);
+
+  const nodes = [];
+  let firstUsed = false;
+  let choices = null;
+
+  block.forEach(function(item){
+    if (item.c){ choices = item.c; return; }
+    if (item.img){ nodes.push(makeFigure(item.img, item.cap)); firstUsed = true; return; }
+    const isFirst = !firstUsed;
+    nodes.push(makeBubble(item, isFirst));
+    firstUsed = true;
+  });
+
+  /* 順番に出す */
+  let delay = 0;
+  nodes.forEach(function(n, idx){
+    n.style.display = "none";
+    $chat.appendChild(n);
+    revealTimers.push(setTimeout(function(){
+      n.style.display = "flex";
+      if (idx > 0) n.scrollIntoView({behavior:"smooth", block:"nearest"});
+      if (idx === nodes.length - 1) paintChoices(choices);
+    }, delay));
+    delay += 380;
+  });
+
+  /* 画面をタップすると、残りを一気に出す */
+  $chat.onclick = function(){
+    clearTimers();
+    nodes.forEach(function(n){ n.style.display = "flex"; });
+    paintChoices(choices);
+  };
+}
+
+function paintChoices(choices){
+  if (!choices || $ch.dataset.done === current) return;
+  $ch.dataset.done = current;
+  $ch.innerHTML = "";
+  choices.forEach(function(c){
+    const btn = document.createElement("button");
+    btn.className = "ch" + (c.style ? " " + c.style : "");
+    btn.textContent = c.t;
+    btn.onclick = function(){
+      if (c.href){ window.location.href = c.href; return; }
+      show(c.go, true);
+    };
+    $ch.appendChild(btn);
+  });
+}
+
+/* --- ぜんぶ一気に読む --- */
+function showAll(){
+  if (current) hist.push(current);
+  clearTimers();
+  $chat.onclick = null;
+  $chat.innerHTML = "";
+  $ch.innerHTML = "";
+  $back.disabled = false;
+  window.scrollTo(0,0);
+
+  const doc = document.createElement("div");
+  doc.className = "doc";
+  const h = document.createElement("h2");
+  h.textContent = "ぜんぶまとめて読む";
+  doc.appendChild(h);
+  $chat.appendChild(doc);
+
+  FULL_ORDER.forEach(function(id){
+    const block = SCRIPT[id];
+    if (!block) return;
+    let first = true;
+    block.forEach(function(item){
+      if (item.c) return;
+      if (item.img){ $chat.appendChild(makeFigure(item.img, item.cap)); first = false; return; }
+      const n = makeBubble(item, first);
+      n.style.display = "flex";
+      $chat.appendChild(n);
+      first = false;
+    });
+  });
+
+  const back = document.createElement("button");
+  back.className = "ch";
+  back.textContent = "会話ですすむ形にもどる";
+  back.onclick = function(){ hist.pop(); show("S00", false); };
+  $ch.appendChild(back);
+}
+
+/* --- よくある質問 --- */
+function showFaq(){
+  if (current) hist.push(current);
+  clearTimers();
+  $chat.onclick = null;
+  $chat.innerHTML = "";
+  $ch.innerHTML = "";
+  $back.disabled = false;
+  window.scrollTo(0,0);
+
+  const doc = document.createElement("div");
+  doc.className = "doc";
+  let html = "<h2>よくある質問</h2>";
+  FAQ.forEach(function(qa){
+    html += '<div class="qa"><b>Q. ' + qa[0] + "</b>" + qa[1] + "</div>";
+  });
+  doc.innerHTML = html;
+  $chat.appendChild(doc);
+
+  const back = document.createElement("button");
+  back.className = "ch";
+  back.textContent = "もどる";
+  back.onclick = function(){ const p = hist.pop(); show(p || "S00", false); };
+  $ch.appendChild(back);
+}
+
+/* --- 下のボタン --- */
+$back.onclick = function(){
+  const p = hist.pop();
+  if (p){ show(p, false); }
+};
+document.getElementById("tgnum").onclick = function(){
+  document.body.classList.toggle("shownum");
+  this.textContent = document.body.classList.contains("shownum") ? "画像番号を隠す" : "画像番号を表示";
+};
+document.getElementById("tgtop").onclick = function(){
+  hist.length = 0; lastProgress = 0;
+  show("S00", false);
+};
+
+/* --- 開始（途中まで見ていたら続きから） --- */
+(function start(){
+  const saved = store.get("kn_guide_pos");
+  if (saved && SCRIPT[saved] && saved !== "S00"){
+    show("S00", false);
+    setTimeout(function(){
+      if (current !== "S00") return;
+      const bar = document.createElement("button");
+      bar.className = "ch sub";
+      bar.textContent = "前回のつづきから読む";
+      bar.onclick = function(){ show(saved, true); };
+      $ch.appendChild(bar);
+    }, 1600);
+  } else {
+    show("S00", false);
+  }
+})();
+
+</script>
+</body>
+</html>
