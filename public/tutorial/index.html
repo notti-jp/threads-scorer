@@ -97,6 +97,16 @@ header{
   white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
 }
 .hd-step{ flex:0 0 auto; font-size:13px; letter-spacing:.06em; opacity:.85; font-variant-numeric:tabular-nums; }
+.hd-close{
+  flex:0 0 auto; display:flex; align-items:center; gap:5px;
+  background:rgba(255,255,255,.16); border:0; border-radius:999px;
+  color:#fff; font-family:"Zen Kaku Gothic New",sans-serif;
+  font-size:13px; font-weight:700; line-height:1;
+  padding:9px 14px; cursor:pointer;
+}
+.hd-close:active{ background:rgba(255,255,255,.28); }
+.hd-close .x{ font-size:15px; line-height:1; }
+.hd-close:focus-visible{ outline:3px solid var(--gold); outline-offset:2px; }
 .hd-bar{ height:4px; background:rgba(255,255,255,.18); }
 .hd-bar>i{ display:block; height:100%; width:0%; background:var(--gold); transition:width .45s ease; }
 
@@ -247,6 +257,7 @@ body.shownum .idbadge{ display:block; }
       <button class="hd-back" id="back" aria-label="まえにもどる">&lsaquo;</button>
       <div class="hd-title"><span id="chap">はじめに</span><small>はじめてガイド｜キニナルメーカー</small></div>
       <div class="hd-step" id="step"></div>
+      <button class="hd-close" id="close" aria-label="ガイドを閉じてキニナルメーカーに戻る"><span class="x">&times;</span>とじる</button>
     </div>
     <div class="hd-bar" id="barwrap" role="progressbar" aria-label="この章の進み具合" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><i id="bar"></i></div>
   </header>
@@ -908,7 +919,7 @@ const SCRIPT = {
   { b:"このツールは、その手伝いをするために作りました。" },
   { b:"あなたの言葉が、\n必要としている人に届きますように。", lead:true },
   { c:[
-    { t:"キニナルメーカーを開く（ログイン／新規登録）", href:"https://notti.jp/" },
+    { t:"とじて、キニナルメーカーに戻る", go:"__RETURN__" },
     { t:"よくある質問を見る", go:"__FAQ__", style:"sub" },
     { t:"もういちど、はじめから読む", go:"__TOP__", style:"quiet" }
   ]}
@@ -1210,8 +1221,17 @@ function go(id, echo){
   if (id === "__ALL__"){ openDoc("all", true); return; }
   if (id === "__FAQ__"){ openDoc("faq", true); return; }
   if (id === "__TOP__"){ restart(); return; }
+  if (id === "__RETURN__"){ closeTutorial(); return; }
   history.pushState({ g:id, e:echo || "" }, "");
   renderBlock(id, { echo:echo });
+}
+
+/* ガイドを閉じて、キニナルメーカーに戻る
+   ・アプリから別タブで開かれた場合 → このタブを閉じる（元のログイン画面に戻る）
+   ・直接ひらいた等で閉じられない場合 → アプリのトップへ移動する */
+function closeTutorial(){
+  window.close();
+  setTimeout(function(){ location.href = "/"; }, 300);
 }
 
 /* いまの stack のうしろを、目的のところまで取り除く */
@@ -1333,6 +1353,7 @@ document.getElementById("tgnum").onclick = function(){
   this.textContent = document.body.classList.contains("shownum") ? "画像番号を隠す" : "画像番号を表示";
 };
 document.getElementById("tgtop").onclick = restart;
+document.getElementById("close").onclick = closeTutorial;
 
 function restart(){
   clearTimers(); pending = null;
