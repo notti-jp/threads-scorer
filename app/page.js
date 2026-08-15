@@ -1601,6 +1601,24 @@ export default function Home() {
   const [showPurchase, setShowPurchase] = useState(false);
   const [purchaseLoading, setPurchaseLoading] = useState(null);
 
+  // はじめてガイド（チュートリアル）の初回案内
+  // "ask" = 見るか確認中 / "no" = 「いいえ」を押したあとの案内 / null = 非表示
+  const [tutorialPrompt, setTutorialPrompt] = useState(null);
+  const tutorialSeenKey = (u) => `kn_tutorial_prompt_seen:${u}`;
+  // ログインしたユーザーが、まだ一度も案内を見ていなければ確認画面を出す
+  useEffect(() => {
+    if (authed && username && !lsGet(tutorialSeenKey(username))) {
+      setTutorialPrompt("ask");
+    }
+  }, [authed, username]);
+  const dismissTutorialPrompt = () => { if (username) lsSet(tutorialSeenKey(username), true); setTutorialPrompt(null); };
+  const openTutorial = () => {
+    if (username) lsSet(tutorialSeenKey(username), true);
+    // 別タブで開く（このタブのログイン状態を保ったままにするため）
+    window.open("/tutorial", "_blank", "noopener");
+    setTutorialPrompt(null);
+  };
+
   // クレジット残高を取得
   const loadCredits = async () => {
     if (!username) return;
@@ -1926,6 +1944,24 @@ export default function Home() {
             </div>
           )}
         </div>
+        {/* はじめてガイド 初回案内モーダル */}
+        {tutorialPrompt && (
+          <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, padding: 16 }}>
+            <div style={{ background: "#FFFFFF", borderRadius: 16, padding: 24, maxWidth: 380, width: "100%", textAlign: "center" }}>
+              {tutorialPrompt === "ask" ? (<>
+                <div style={{ fontSize: 32, marginBottom: 8 }}>📖</div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: "#1A1A1A", marginBottom: 8 }}>はじめてガイドを見ますか？</div>
+                <div style={{ fontSize: 13.5, color: "#666", lineHeight: 1.8, marginBottom: 22 }}>会話形式で、使い方が数分でわかります。<br />はじめての方は、さきに見ておくのがおすすめです。</div>
+                <button onClick={openTutorial} style={{ width: "100%", padding: 14, borderRadius: 10, border: "none", background: "#0a0a0a", color: "#FFFFFF", fontSize: 15, fontWeight: 600, cursor: "pointer" }}>はい、見る（別タブで開きます）</button>
+                <button onClick={() => setTutorialPrompt("no")} style={{ width: "100%", padding: 12, marginTop: 10, borderRadius: 10, border: "1px solid #E5E5E5", background: "transparent", color: "#888", fontSize: 14, cursor: "pointer" }}>いいえ</button>
+              </>) : (<>
+                <div style={{ fontSize: 15, fontWeight: 700, color: "#1A1A1A", marginBottom: 12 }}>わかりました</div>
+                <div style={{ fontSize: 13.5, color: "#555", lineHeight: 1.9, marginBottom: 22 }}>あとで見たくなったら、画面の上のほうにある<br /><span style={{ color: "#83c2cb", fontWeight: 600 }}>📖 はじめてガイド ― 使い方がわからない方はこちら</span><br />から、いつでも開けます。</div>
+                <button onClick={dismissTutorialPrompt} style={{ width: "100%", padding: 14, borderRadius: 10, border: "none", background: "#0a0a0a", color: "#FFFFFF", fontSize: 15, fontWeight: 600, cursor: "pointer" }}>とじる</button>
+              </>)}
+            </div>
+          </div>
+        )}
         {/* 購入モーダル */}
         {showPurchase && (
           <div style={{ position: "fixed", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999, padding: 16 }}>
@@ -1967,7 +2003,7 @@ export default function Home() {
           <>
             {announcement && announcementType === "alert" && <div style={{ marginBottom: 14, padding: "12px 16px", background: "#FFF3CD", border: "1px solid #FFEEBA", borderRadius: 10, fontSize: 13, color: "#856404", lineHeight: 1.6 }}>⚠ {announcement}</div>}
             {announcement && announcementType === "memo" && <div style={{ marginBottom: 14, position: "relative", padding: "12px 16px 12px 20px", background: "#F8F8F8", borderRadius: 12, borderLeft: "3px solid #83c2cb", fontSize: 13, color: "#555", lineHeight: 1.7 }}><span style={{ fontWeight: 600, color: "#0a0a0a" }}>投稿のヒント：</span>{announcement}</div>}
-            <div style={{ marginBottom: 14, textAlign: "center" }}><a href="/guide" style={{ fontSize: 12, color: "#83c2cb", textDecoration: "none", fontWeight: 500 }}>📖 はじめてガイド ― 使い方がわからない方はこちら</a></div>
+            <div style={{ marginBottom: 14, textAlign: "center" }}><a href="/tutorial" target="_blank" rel="noopener noreferrer" style={{ fontSize: 12, color: "#83c2cb", textDecoration: "none", fontWeight: 500 }}>📖 はじめてガイド ― 使い方がわからない方はこちら</a></div>
             <div style={{ display: "flex", gap: 4, marginBottom: 16, background: "#FAFAFA", borderRadius: 10, padding: 4 }}>
               {TABS.map(t => <button key={t.id} onClick={() => { setTab(t.id); setDraftEdit(null); if (t.id !== "A") setAppealText(""); }} style={{ flex: 1, padding: "10px 8px", borderRadius: 8, border: "none", cursor: "pointer", background: tab === t.id ? "#0a0a0a" : "transparent", color: tab === t.id ? "#FFFFFF" : "#777777", fontSize: 12, fontWeight: 600 }}>{t.label}</button>)}
             </div>
